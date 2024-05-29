@@ -1,0 +1,22 @@
+{
+  "name": "default",
+  "graphs": [
+    {
+      "module": "GoogleModule",
+      "args": [
+        {
+          "name": "email",
+          "type": "string"
+        }
+      ],
+      "graphs": [
+        {
+          "module": "FacebookModule"
+        },
+        {
+          "module": "GithubModule"
+        }
+      ]
+    }
+  ]
+}

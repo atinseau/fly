@@ -1,0 +1,28 @@
+services:
+  puppeteer:
+    image: ghcr.io/browserless/chromium
+    ports:
+      - 4009:3000
+  dragonfly:
+    image: docker.dragonflydb.io/dragonflydb/dragonfly:latest
+    command: 
+      - dragonfly
+      - --cluster_mode=emulated 
+      - --lock_on_hashtags
+    ulimits:
+      memlock: -1
+    ports:
+      - 6379:6379
+    volumes:
+      - ./docker/dragonfly:/data
+  postgres:
+    image: postgres:16.1-bookworm
+    restart: always
+    env_file:
+      - .env
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+    volumes:
+        - ./docker/postgres:/var/lib/postgresql/data
