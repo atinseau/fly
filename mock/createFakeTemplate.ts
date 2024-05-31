@@ -1,9 +1,18 @@
 import { createRunner, createTemplate, prisma } from "../lib/prisma"
-import { createAdapters } from "../lib/prisma/adapter"
 
 
 const createFakeTemplate = async () => {
   const name = 'My Template'
+
+  // delete existing template
+  await prisma.adapter.deleteMany({
+    where: {
+      template: {
+        name
+      }
+    }
+  })
+
   let template = await prisma.template.findFirst({
     include: {
       adapters: true,
@@ -16,17 +25,6 @@ const createFakeTemplate = async () => {
 
   if (!template) {
     template = await createTemplate('My Template')
-    template.adapters = await createAdapters({
-      name: 'GmailAdapter',
-      children: [
-        {
-          name: 'GithubAdapter',
-        },
-        {
-          name: 'FacebookAdapter'
-        }
-      ]
-    })
   }
 
   if (!template.runners.length) {

@@ -1,23 +1,51 @@
-// import { createFakeTemplate } from "./mock/createFakeTemplate";
+import { createFakeTemplate } from "./mock/createFakeTemplate";
+import { createAdapterGraph } from "./lib/prisma/adapter";
+import { uuid } from "./lib";
 
-import { createAdapters } from "./lib/prisma/adapter";
+const template = await createFakeTemplate()
 
-
-// const template = await createFakeTemplate()
-
-
-// console.log(template)
-
-const adapters = await createAdapters({
-  name: 'GmailAdapter',
-  children: [
-    {
-      name: 'GithubAdapter',
-    },
-    {
-      name: 'FacebookAdapter'
-    }
-  ]
-})
+const adapters = await createAdapterGraph(template.id, [
+  {
+    name: 'GmailAdapter',
+    id: "1",
+  },
+  {
+    name: 'FacebookAdapter',
+    id: "2",
+    deps: [
+      "1"
+    ]
+  },
+  {
+    id: "3",
+    name: 'GithubAdapter',
+    deps: [
+      "1"
+    ],
+  },
+  {
+    id: "4",
+    name: 'PhysicalAdapter',
+    deps: [
+      "2",
+      "3"
+    ]
+  },
+  {
+    id: "5",
+    name: 'TwitterAdapter',
+    deps: [
+      "2"
+    ]
+  },
+  {
+    id: "6",
+    name: "WelcomeAdapter",
+    deps: [
+      "4",
+      "5"
+    ]
+  }
+])
 
 console.log(adapters)

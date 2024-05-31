@@ -1,3 +1,6 @@
 export * from './GmailAdapter'
 export * from './GithubAdapter'
 export * from './FacebookAdapter'
+export * from './PhysicalAdapter'
+export * from './TwitterAdapter'
+export * from './WelcomeAdapter'

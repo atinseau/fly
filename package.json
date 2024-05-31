@@ -13,9 +13,12 @@
   },
   "dependencies": {
     "@prisma/client": "5.14.0",
+    "@types/lodash": "^4.17.4",
     "bullmq": "^5.7.12",
+    "lodash": "^4.17.21",
     "prisma": "^5.14.0",
     "puppeteer": "^22.10.0",
-    "rxjs": "^7.8.1"
+    "rxjs": "^7.8.1",
+    "zod": "^3.23.8"
   }
 }

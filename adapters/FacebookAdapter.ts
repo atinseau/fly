@@ -1,4 +1,5 @@
-import { Adapter } from "./Adapter";
+import { z } from "zod";
+import { Adapter } from "./lib/Adapter";
 
 export class FacebookAdapter extends Adapter {
   constructor() {

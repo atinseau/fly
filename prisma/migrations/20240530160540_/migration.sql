@@ -5,7 +5,8 @@ CREATE TABLE "Adapter" (
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
     "templateId" TEXT NOT NULL,
-    "prevAdapterId" TEXT,
+    "prevAdapterIds" TEXT[],
+    "nextAdapterIds" TEXT[],
 
     CONSTRAINT "Adapter_pkey" PRIMARY KEY ("id")
 );
@@ -36,9 +37,6 @@ CREATE UNIQUE INDEX "Template_name_key" ON "Template"("name");
 
 -- AddForeignKey
 ALTER TABLE "Adapter" ADD CONSTRAINT "Adapter_templateId_fkey" FOREIGN KEY ("templateId") REFERENCES "Template"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Adapter" ADD CONSTRAINT "Adapter_prevAdapterId_fkey" FOREIGN KEY ("prevAdapterId") REFERENCES "Adapter"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Runner" ADD CONSTRAINT "Runner_templateId_fkey" FOREIGN KEY ("templateId") REFERENCES "Template"("id") ON DELETE CASCADE ON UPDATE CASCADE;
