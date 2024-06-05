@@ -12,9 +12,11 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@hono/zod-validator": "^0.2.2",
     "@prisma/client": "5.14.0",
     "@types/lodash": "^4.17.4",
     "bullmq": "^5.7.12",
+    "hono": "^4.4.2",
     "lodash": "^4.17.21",
     "prisma": "^5.14.0",
     "puppeteer": "^22.10.0",

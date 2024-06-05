@@ -1,5 +1,4 @@
-import { createRunner, createTemplate, prisma } from "../lib/prisma"
-
+import { createTemplate, prisma } from "../lib/prisma"
 
 const createFakeTemplate = async () => {
   const name = 'My Template'
@@ -26,13 +25,6 @@ const createFakeTemplate = async () => {
   if (!template) {
     template = await createTemplate('My Template')
   }
-
-  if (!template.runners.length) {
-    template.runners = [
-      await createRunner(template.id)
-    ]
-  }
-
   return template
 }
 
