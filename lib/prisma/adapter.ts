@@ -1,11 +1,9 @@
-import type * as Adapters from '@/adapters'
 import { Graph } from '../graph'
 import { uuid } from '..'
 import { prisma } from './client'
+import type { AdapterNames } from '../../global'
 
-export type AdapterName = keyof typeof Adapters
-
-const createAdapters = async (templateId: string, graph: Graph<AdapterGraphData>) => {
+const createAdapters = async (templateId: string, graph: Graph<AdapterNames>) => {
   // Fix all incomming ids, graphs accept every string format as id
   // but for prisma we need to convert them to uuid
   // so we can use them as primary key
@@ -20,7 +18,7 @@ const createAdapters = async (templateId: string, graph: Graph<AdapterGraphData>
     return newId
   }
 
-  const patchedGraph = new Graph<AdapterName>()
+  const patchedGraph = new Graph<AdapterNames>()
 
   for (const vertex of graph.getVertices()) {
     patchedGraph.addVertex(getId(vertex), graph.getData(vertex))
@@ -34,7 +32,7 @@ const createAdapters = async (templateId: string, graph: Graph<AdapterGraphData>
     data: patchedGraph.getVertices().map((vertex) => ({
       id: vertex,
       templateId,
-      name: patchedGraph.getData(vertex),
+      name: patchedGraph.getData(vertex).toString(),
       prevAdapterIds: patchedGraph.outgoing(vertex),
       nextAdapterIds: patchedGraph.incoming(vertex)
     }))
@@ -52,9 +50,9 @@ const getAdapterGraph = async (templateId: string) => {
       templateId
     }
   })
-  const graph = new Graph<AdapterName>()
+  const graph = new Graph<AdapterNames>()
   for (const adapter of adapters) {
-    graph.addVertex(adapter.id, adapter.name as AdapterName)
+    graph.addVertex(adapter.id, adapter.name as AdapterNames)
     for (const nextAdapterId of adapter.nextAdapterIds) {
       graph.addEdge(adapter.id, nextAdapterId)
     }

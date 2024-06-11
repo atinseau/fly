@@ -1,8 +1,8 @@
-import { zValidator as validator } from "@hono/zod-validator";
+import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
 import * as Adapters from '@/adapters'
 
-const validateTemplate = validator('json', z.object({
+const validateTemplate = zValidator('json', z.object({
   name: z.string(),
   adapters: z.array(
     z.object({
@@ -35,6 +35,16 @@ const validateTemplate = validator('json', z.object({
       }
       return true
     }, 'This adapter contains an edge that does not exist in the adapters array.')
+    .refine((adapters) => {
+      for (const adapter of adapters) {
+        if (!adapter.edges || adapter.edges.length === 0) {
+          if (adapters.filter((a) => a.edges && a.edges.includes(adapter.id)).length === 0) {
+            return false
+          }
+        }
+      }
+      return true
+    }, 'Adapter cannot be orphaned.')
 }))
 
 export {

@@ -1,4 +1,4 @@
-import { Adapter } from "./lib/Adapter";
+import { Adapter } from "./Adapter";
 
 
 export class PhysicalAdapter extends Adapter {

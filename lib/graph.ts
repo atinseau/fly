@@ -1,6 +1,8 @@
+import { union } from "lodash"
 
 export type JsonGraph = {
   vertices: string[]
+  data: Record<string, any>
   edges: Record<string, { vertex: string, direction: 0 | 1 }[]>
 }
 
@@ -13,22 +15,24 @@ export class Graph<Data> {
   private verticesData: Record<string, Data> = {}
   private edges: Record<string, GraphEdge[]> = {}
 
-  static from(json: JsonGraph) {
-    const graph = new Graph()
+  static from<T>(json: JsonGraph) {
+    const graph = new Graph<T>()
     graph['edges'] = json.edges
     graph['vertices'] = json.vertices
+    graph['verticesData'] = json.data
     return graph
   }
 
   addVertex(id: string, data?: Data) {
+    // overwrite data if it's already exist
+    if (data) {
+      this.verticesData[id] = data
+    }
     if (this.vertices.includes(id)) {
       return this
     }
     this.vertices.push(id)
     this.edges[id] = []
-    if (data) {
-      this.verticesData[id] = data
-    }
     return this
   }
 
@@ -86,6 +90,24 @@ export class Graph<Data> {
       }))
   }
 
+  // Return all the predecessors of a vertex
+  predecessors(vertex?: string): string[] {
+    let outgoing = this.outgoing(vertex)
+    for (const v of outgoing) {
+      outgoing = union(outgoing, this.predecessors(v))
+    }
+    return outgoing
+  }
+
+  // Return all the successors of a vertex
+  successors(vertex?: string): string[] {
+    let incoming = this.incoming(vertex)
+    for (const v of incoming) {
+     incoming = union(incoming, this.successors(v))
+    }
+    return incoming
+  }
+
   sibling(vertex: string) {
     const incoming = this.incoming(vertex)
     return incoming.flatMap(v => this.outgoing(v).filter(v => v !== vertex))
@@ -99,6 +121,7 @@ export class Graph<Data> {
     return {
       vertices: this.vertices,
       edges: this.edges,
+      data: this.verticesData
     }
   }
 
